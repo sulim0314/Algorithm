@@ -38,7 +38,7 @@ public class MyLinkedListTest {
 		System.out.println((findEmp==null)?"해당 키를 가진 사원은 없어요":findEmp);
 		System.out.println("---이름으로 검색----------");
 		//[2] 이름으로 사원검색하기 ==> Emp에 Name_Order Comparator구성해서...
-		//findEmp=list.search(new Emp("김사원",0), Emp.Name_Order);
+		findEmp=list.search(new Emp("김사원",0), Emp.Name_Order);
 		System.out.println((findEmp==null)?"해당 이름의 사원은 없어요":findEmp);
 		
 		list.printCurrentNode();

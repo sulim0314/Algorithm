@@ -1,6 +1,5 @@
 package day02;
 import java.util.*;
-// 시험
 public class Q21_ArraysBinarySearch {
 	
 	static Scanner sc=new Scanner(System.in);

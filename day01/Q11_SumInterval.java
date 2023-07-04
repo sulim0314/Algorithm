@@ -4,50 +4,61 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Q11_SumInterval {
-	static Scanner sc = new Scanner(System.in);
+	static Scanner sc=new Scanner(System.in);
 	
 	public static int[] solution(int n, int m) {
+		int answer[]= new int[m];
+		System.out.println("저장할 숫자 "+n+"개 입력하세요");
+		int []arr=new int[n];
+		int []sumArr=new int[n+1];//입력받을때 부터 누적합을 저장할 배열 생성
+		for(int i=0;i<n;i++) {
+			arr[i]=sc.nextInt(); //1 3 5 2 4
+			sumArr[i+1]=sumArr[i]+arr[i];
+		}//for-----
+		System.out.println("arr: "+Arrays.toString(arr));
+		System.out.println("sumArr: "+Arrays.toString(sumArr));
 		
-		System.out.print("배열에 저장할 값을 입력하세요 >> ");
-		String str = sc.nextLine(); // 5 4 3 2 1
-		String[] strArr = str.split(" ");
-		int[] intArr = new int[n]; 
-		int[] answer = new int[m]; 
-		
-		for(int i=0; i<strArr.length; i++) {
-			intArr[i] = Integer.parseInt(strArr[i]);
+		for(int i=0;i<m;i++) {
+			int start=sc.nextInt();
+			int end=sc.nextInt();
+			int sum=sumArr[end]-sumArr[start-1];
+			answer[i]=sum;
+			System.out.printf("%d부터 %d까지의 합: %d%n", start, end, answer[i]);
 		}
 		
-		System.out.print("구간의 시작값, 끝값을 입력하세요 >> ");
-
-		for(int i=0; i<m; i++) {
-			
-			int sum = 0;
-			
-			String startEnd = sc.nextLine(); // 1 3
-			String[] ansArr = startEnd.split(" ");
-			int start = Integer.parseInt(ansArr[0]); // 1
-			int end = Integer.parseInt(ansArr[1]); // 3
-			
-			for(int j=start-1; j<end; j++) {
-				sum += intArr[j]; // 12
-			}
-			
-			answer[i] = sum;
-		}
-
 		return answer;
 	}
 	
+	public static int[] solution2(int n, int m) {
+		//배열 활용
+		int answer[]= new int[m];
+		System.out.println("저장할 숫자 "+n+"개 입력하세요");
+		int []arr=new int[n];
+		for(int i=0;i<n;i++) {
+			arr[i]=sc.nextInt(); //1 3 5 2 4
+		}
+		
+		for(int i=0;i<m;i++) {
+			System.out.println("구간 정보를 입력하세요 (start, end)");
+			int start=sc.nextInt();
+			int end=sc.nextInt();
+			int sum=0;
+			for(int j=start;j<=end;j++) {
+				 sum+=arr[j-1];
+			}			
+			answer[i]=sum;
+			System.out.printf("%d부터 %d까지의 합: %d%n", start, end, answer[i]);
+		}//for----------------
+		
+		return answer;		
+	}
+	
 	public static void main(String[] args) {
-		System.out.print("N과 M을 입력하세요 >> ");
-		String[] nm = sc.nextLine().split(" ");
-		int N = Integer.parseInt(nm[0]);
-		int M = Integer.parseInt(nm[1]);
+		System.out.println("N과 M을 입력하세요");
+		int N=sc.nextInt();
+		int M=sc.nextInt();
+		int sum[]=solution(N,M);
 		
-		int sum[] = solution(N,M);
-		
-		System.out.println(Arrays.toString(sum));
 	}
 
 }

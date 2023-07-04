@@ -1,15 +1,12 @@
 package day03;
 import java.util.*;
-
 class Point implements Comparable<Point>{
 	
 	int x, y;
-	
 	public Point(int x, int y) {
 		this.x=x;
 		this.y=y;
 	}
-	
 	public int compareTo(Point obj) {
 		if(this.x==obj.x) {//x좌표가 같다면
 			return obj.y-this.y;//y좌표 내림차순
