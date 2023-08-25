@@ -1,0 +1,70 @@
+package com.sulim.homework._0824목;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.StringTokenizer;
+
+public class Main_15961_G4_회전초밥_고수림 {
+	
+	public static void main(String[] args) throws Exception {
+		// k개의 접시를 연속해서 먹을 경우 할인된 정액 가격으로 제공
+		// 각 고객에게 초밥의 종류 하나가 쓰인 쿠폰을 발행.. 초밥 하나 무료 제공.
+		// 벨트 위에 없으면 만들어서 제공할거임ㅋ
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		int n = Integer.parseInt(st.nextToken()); // 전 초밥 벨트에 놓인 접시의 수 N
+		int d = Integer.parseInt(st.nextToken()); // 초밥의 가짓수 d
+		int k = Integer.parseInt(st.nextToken()); // 연속해서 먹는 접시의 수 k
+		int c = Integer.parseInt(st.nextToken()); // 쿠폰 번호 c
+		
+		int[] arr = new int[n+k];
+		
+		// 앞에서부터 k개는 따로 저장해두고 나중에 뒤에 붙여주기
+		for(int i=0; i<k-1; i++) {
+			st = new StringTokenizer(br.readLine());
+			int temp = Integer.parseInt(st.nextToken());
+			arr[i] = temp; 
+			arr[n+i] = temp; 
+		}
+		
+		// k번째부터 마지막까지
+		for(int i=k-1; i<n; i++) {
+			st = new StringTokenizer(br.readLine());
+			int temp = Integer.parseInt(st.nextToken());
+			arr[i] = temp;
+		}
+		
+		HashMap<Integer, Integer> hm = new HashMap<>();
+		hm.put(c, 1);
+		
+		int max = 0;
+		int num = 0;
+		for(int i=0; i<k; i++) { // 처음 k개 넣어주기
+			hm.put(arr[i], hm.getOrDefault(arr[i], 0)+1);
+		}
+		
+		num = hm.size();
+		max = Math.max(max, num);
+		
+		for(int i=0; i<n-1; i++) { 
+			hm.put(arr[i], hm.get(arr[i])-1);
+			if(hm.get(arr[i]) == 0) {
+				hm.remove(arr[i]);
+			}
+			hm.put(arr[i+k], hm.getOrDefault(arr[i+k], 0)+1);
+			
+			num = hm.size();
+			max = Math.max(max, num);
+		}
+		
+		
+		System.out.println(max);
+		
+	}
+
+}
+
+
