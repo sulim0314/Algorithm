@@ -24,13 +24,16 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
+
+        N = Integer.parseInt(st.nextToken());
         balls = new Ball[N];
         result = new int[N];
         colorSum = new int[N+1];
 
         for (int i = 0; i < N; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
+            st = new StringTokenizer(br.readLine());
             int color = Integer.parseInt(st.nextToken());
             int size = Integer.parseInt(st.nextToken());
             balls[i] = new Ball(i, color, size);
@@ -50,9 +53,11 @@ public class Main {
             result[ball.idx] = sum - colorSum[ball.color];
         }
 
-        for(int i=0; i<N; i++) {
-            System.out.println(result[i]);
+        for (int r : result) {
+            sb.append(r).append("\n");
         }
+
+        System.out.println(sb);
 
     }
 
