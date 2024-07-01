@@ -1,199 +1,159 @@
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int N, M;
-    static int G, R;
-    static int[][] garden;
-    static List<int[]> possibleLands;
-    static int[] selected;
-    static int[] greenSelected;
-    static int answer;
 
-    static int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-
-    static class Node {
-        int r;
-        int c;
-        int t;
-        char color;
-
-        public Node (int r, int c, int t, char color) {
-            this.r = r;
-            this.c = c;
-            this.t = t;
+    static class Info {
+        int x, y, time, color;
+        public Info(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+        public Info(int x, int y, int time, int color) {
+            this.x = x;
+            this.y = y;
+            this.time = time;
             this.color = color;
         }
     }
 
-    static boolean check(int r, int c) {
-        return r >= 0 && c >= 0 && r < N && c < M;
-    }
+    static int N, M, G, R;
+    static int[][] map;
+    static int[] dx = {-1, 1, 0 ,0};
+    static int[] dy = {0, 0, -1, 1};
+    static int max = 0;
+    static int[] selectedLand;
+    static int[] selectedGreen;
+    static ArrayList<Info> possibleLand;
 
-    /*
-        1. 배양액을 뿌릴 수 있는 땅 중 (G + R)개 뽑기
-     */
-    static void selectLand(int start, int count) {
-        if (count == (G + R)) {
-            selectGreen(0, 0);
-            return;
-        }
-
-        for (int i = start; i < possibleLands.size(); i++) {
-            selected[count] = i;
-            selectLand(i + 1, count + 1);
-        }
-    }
-
-    /*
-        2. 뽑은 땅에서 G개 뽑기
-     */
-    static void selectGreen(int start, int count) {
-        if (count == G) {
-            bfs();
-            return;
-        }
-
-        for (int i = start; i < G + R; i++) {
-            greenSelected[count] = i;
-            selectGreen(i + 1, count + 1);
-        }
-    }
-
-    /*
-        3. 배양액 뿌리기
-     */
-    static void bfs() {
-        int[][] greenTime = new int[N][M];
-        int[][] redTime = new int[N][M];
-
-        Queue<Node> queue = new LinkedList<>();
-
-        for (int i = 0; i < G + R; i++) {
-            boolean check = false;
-
-            for (int j = 0; j < G; j++) {
-                if (greenSelected[j] == i) {
-                    check = true;
-                }
-            }
-
-            if (check) {
-                int[] land = possibleLands.get(selected[i]);
-                greenTime[land[0]][land[1]] = 1;
-                queue.offer(new Node(land[0], land[1], 1, 'G'));
-                continue;
-            }
-
-            int[] land = possibleLands.get(selected[i]);
-            redTime[land[0]][land[1]] = 1;
-            queue.offer(new Node(land[0], land[1], 1, 'R'));
-        }
-
-        int count = 0;
-        while (!queue.isEmpty()) {
-            Node now = queue.poll();
-
-			// 꽃이 핀 경우
-            if (greenTime[now.r][now.c] == redTime[now.r][now.c]) {
-                continue;
-            }
-
-            for (int[] d : directions) {
-                int nr = now.r + d[0];
-                int nc = now.c + d[1];
-
-                if (!check(nr, nc)) {
-                    continue;
-                }
-
-                if (garden[nr][nc] == 0) {
-                    continue;
-                }
-
-				// 초록색 배양액인 경우
-                if (now.color == 'G') { 
-                	// 이미 초록색 배양액을 뿌린 경우
-                    if (greenTime[nr][nc] > 0) { 
-                        continue;
-                    }
-					
-                    // 이미 빨간색 배양액을 뿌린 경우
-                    if (redTime[nr][nc] > 0 && redTime[nr][nc] <= now.t) {
-                        continue;
-                    }
-
-                    greenTime[nr][nc] = now.t + 1;
-
-					// 꽃이 피는 경우
-                    if (redTime[nr][nc] == now.t + 1) {
-                        count++;
-                        continue;
-                    }
-
-                    queue.offer(new Node(nr, nc, now.t + 1, now.color));
-                    continue;
-                }
-
-				// 빨간색 배양액인 경우
-                
-                // 이미 빨간색 배양액을 뿌린 경우
-                if (redTime[nr][nc] > 0) {
-                    continue;
-                }
-
-				// 이미 초록색 배양액을 뿌린 경우
-                if (greenTime[nr][nc] > 0 && greenTime[nr][nc] <= now.t) {
-                    continue;
-                }
-
-                redTime[nr][nc] = now.t + 1;
-
-				// 꽃이 피는 경우
-                if (greenTime[nr][nc] == now.t + 1) {
-                    count++;
-                    continue;
-                }
-
-                queue.offer(new Node(nr, nc, now.t + 1, now.color));
-            }
-        }
-
-        answer = Math.max(answer, count);
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new java.io.InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         G = Integer.parseInt(st.nextToken());
         R = Integer.parseInt(st.nextToken());
-
-        garden = new int[N][M];
-        possibleLands = new ArrayList<>();
-        answer = 0;
+        map = new int[N][M];
+        selectedLand = new int[G + R];
+        selectedGreen = new int[G];
+        possibleLand = new ArrayList<>();
 
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-
             for (int j = 0; j < M; j++) {
-                garden[i][j] = Integer.parseInt(st.nextToken());
-
-                if (garden[i][j] == 2) {
-                    possibleLands.add(new int[] {i, j});
+                map[i][j] = Integer.parseInt(st.nextToken());
+                if (map[i][j] == 2) {
+                    possibleLand.add(new Info(i, j));
                 }
             }
         }
 
-        selected = new int[G + R];
-        greenSelected = new int[G];
         selectLand(0, 0);
+        System.out.println(max);
+    }
 
-        System.out.println(answer);
-        br.close();
+    private static void selectLand(int cnt, int start) {
+        if (cnt == G + R) {
+            selectGreen(0, 0);
+            return;
+        }
+
+        for (int i = start; i < possibleLand.size(); i++) {
+            selectedLand[cnt] = i;
+            selectLand(cnt + 1, i + 1);
+        }
+    }
+
+    private static void selectGreen(int cnt, int start) {
+        if (cnt == G) {
+            go();
+            return;
+        }
+
+        for (int i = start; i < G + R; i++) {
+            selectedGreen[cnt] = i;
+            selectGreen(cnt + 1, i + 1);
+        }
+    }
+
+    // bfs
+    private static void go() {
+        int[][] greenTime = new int[N][M];
+        int[][] redTime = new int[N][M];
+        Queue<Info> q = new LinkedList<>();
+
+        for (int i = 0; i < G + R; i++) {
+            boolean check = false;
+
+            for (int j = 0; j < G; j++) {
+                if (selectedGreen[j] == i) {
+                    check = true;
+                    break;
+                }
+            }
+            if (check) {
+                greenTime[possibleLand.get(selectedLand[i]).x][possibleLand.get(selectedLand[i]).y] = 1;
+                q.add(new Info(possibleLand.get(selectedLand[i]).x, possibleLand.get(selectedLand[i]).y, 1, 3));
+            } else {
+                redTime[possibleLand.get(selectedLand[i]).x][possibleLand.get(selectedLand[i]).y] = 1;
+                q.add(new Info(possibleLand.get(selectedLand[i]).x, possibleLand.get(selectedLand[i]).y, 1, 4));
+            }
+        }
+
+        int cnt = 0;
+        while (!q.isEmpty()) {
+            Info cur = q.poll();
+
+            // 꽃이 피었을 때
+            if (greenTime[cur.x][cur.y] == redTime[cur.x][cur.y]) {
+                continue;
+            }
+
+            for (int i = 0; i < 4; i++) {
+                int nx = cur.x + dx[i];
+                int ny = cur.y + dy[i];
+
+                if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
+                if (map[nx][ny] == 0) continue;
+
+                if (cur.color == 3) { // green
+                    if (greenTime[nx][ny] > 0) continue;
+
+                    // 이미 빨간색을 뿌렸음
+                    if (redTime[nx][ny] > 0 && redTime[nx][ny] <= cur.time) continue;
+
+                    greenTime[nx][ny] = cur.time + 1;
+
+                    // 꽃이 피는 경우
+                    if (redTime[nx][ny] == cur.time + 1) {
+                        cnt++;
+                        continue;
+                    }
+
+                    q.add(new Info(nx, ny, cur.time + 1, cur.color));
+                } else { // red
+                    if (redTime[nx][ny] > 0) continue;
+
+                    // 이미 초록색을 뿌렸음
+                    if (greenTime[nx][ny] > 0 && greenTime[nx][ny] <= cur.time) continue;
+
+                    redTime[nx][ny] = cur.time + 1;
+
+                    // 꽃이 피는 경우
+                    if (greenTime[nx][ny] == cur.time + 1) {
+                        cnt++;
+                        continue;
+                    }
+
+                    q.add(new Info(nx, ny, cur.time + 1, 4));
+                }
+            }
+        }
+
+        max = Math.max(max, cnt);
     }
 }
