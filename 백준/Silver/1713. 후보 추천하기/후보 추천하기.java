@@ -22,7 +22,7 @@ public class Main {
     }
 
     static int N, M;
-    static LinkedList<Info> list = new LinkedList<>(); // 후보 추천 리스트 크기 N 확인
+    static ArrayList<Info> list = new ArrayList<>(); // 후보 추천 리스트 크기 N 확인
     static int[] students = new int[101]; // 추천받은만큼 증가시킬 배열
 
     public static void main(String[] args) throws IOException {
@@ -43,8 +43,8 @@ public class Main {
                     students[studentNum]++;
                 } else { // 처음 추천인데, 리스트가 꽉 차서, 가장 적은 추천수 학생 뺴야할 경우
                     Collections.sort(list);
-                    students[list.getFirst().studentNum] = 0; // 추천받은 수 초기화
-                    list.removeFirst(); // 가장 추천수가 적은 학생 제거
+                    students[list.get(0).studentNum] = 0; // 추천받은 수 초기화
+                    list.remove(0); // 가장 추천수가 적은 학생 제거
                     list.add(new Info(studentNum, 1, i)); // 새로운 학생 추가
                     students[studentNum]++;
                 }
