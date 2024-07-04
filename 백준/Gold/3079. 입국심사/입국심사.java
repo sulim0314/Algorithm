@@ -24,8 +24,6 @@ public class Main {
             max = Math.max(max, time[i]);
         }
 
-        Arrays.sort(time);
-
         // 0~7, 7~14, 14~21, 21~28
         // 0~10, 10~20
 
