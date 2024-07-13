@@ -14,47 +14,44 @@ public class Main {
         N = Integer.parseInt(br.readLine());
         map = new char[N][N];
 
-        divide(0, 0, N);
+        divide(0, 0, N, false);
+
         for (int i = 0; i < N; i++) {
-            for(int j=0; j<N; j++) {
-                if(map[i][j] != '*') {
-                    sb.append(' ');
-                } else {
-                    sb.append('*');
-                }
-            }
-            sb.append('\n');
+            sb.append(map[i]).append("\n");
         }
+
         System.out.println(sb.toString());
     }
 
-    private static char divide(int x, int y, int size) {
+    private static void divide(int x, int y, int size, boolean isBlank) {
+
+        if (isBlank) {
+            for (int i = x; i < x + size; i++) {
+                for (int j = y; j < y + size; j++) {
+                    map[i][j] = ' ';
+                }
+            }
+            return;
+        }
 
         if (size == 1) {
             map[x][y] = '*';
-            return '*';
+            return;
         }
 
-        int[] arr = new int[9];
-
-        arr[0] = divide(x, y, size/3);
-        arr[1] = divide(x, y+size/3, size/3);
-        arr[2] = divide(x, y+2*size/3, size/3);
-        arr[3] = divide(x+size/3, y, size/3);
-        // 중앙은 blank
-        arr[4] = ' ';
-        arr[5] = divide(x+size/3, y+2*size/3, size/3);
-        arr[6] = divide(x+2*size/3, y, size/3);
-        arr[7] = divide(x+2*size/3, y+size/3, size/3);
-        arr[8] = divide(x+2*size/3, y+2*size/3, size/3);
-
-        if (arr[0] == '*' && arr[1] == '*' && arr[2] == '*' && arr[3] == '*' && arr[5] == '*' && arr[6] == '*' && arr[7] == '*' && arr[8] == '*') {
-            map[x+size/3][y+size/3] = ' ';
-        } else {
-            map[x+size/3][y+size/3] = '*';
+        int newSize = size / 3;
+        int count = 0;
+        for (int i = x; i < x + size; i += newSize) {
+            for (int j = y; j < y + size; j += newSize) {
+                count++;
+                if (count == 5) {
+                    divide(i, j, newSize, true);
+                } else {
+                    divide(i, j, newSize, false);
+                }
+            }
         }
 
-        return '*';
     }
 
 }
