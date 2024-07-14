@@ -4,8 +4,7 @@ import java.util.*;
 public class Main {
 
     static class Bosuk implements Comparable<Bosuk> {
-        int weight;
-        int value;
+        int weight, value;
 
         public Bosuk(int weight, int value) {
             this.weight = weight;
@@ -52,6 +51,7 @@ public class Main {
         PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
 
         int idx = 0;
+        // 각 가방별로, 가방에 들어갈 수 있는 보석들 중 가장 가치가 높은 보석을 pq에 넣어서 하나씩 빼기
         for(int i = 0; i < K; i++) {
             // 가방에 들어갈 수 있는 보석들을 pq에 넣기
             while(idx < N && bosuks[idx].weight <= bags[i]) {
