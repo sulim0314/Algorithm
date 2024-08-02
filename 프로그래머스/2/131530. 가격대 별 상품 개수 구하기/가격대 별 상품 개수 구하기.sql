@@ -1,13 +1,8 @@
-with tmp as (
-    select floor(price/10000) * 10000 as p
-    from PRODUCT
-)
-
 SELECT 
-    p as price_group, 
+    floor(price/10000) * 10000 as price_group, 
     count(*) as products
-from tmp 
-group by p
+from PRODUCT
+group by price_group
 order by 1 asc;
 
 # select floor(price/10000) * 10000
