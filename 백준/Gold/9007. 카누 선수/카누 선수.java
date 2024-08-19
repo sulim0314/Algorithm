@@ -1,21 +1,21 @@
 import java.util.*;
 import java.io.*;
 
+// 카누선수, 이분탐색.... ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
 public class Main {
 
     static int k, n;
 
-    public static void main(String[] args) throws IOException {
-
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
         StringBuilder sb = new StringBuilder();
-        StringTokenizer st;
 
-
-        int T = Integer.parseInt(br.readLine());
-        for (int t = 1; t <= T; t++) {
+        int T = Integer.parseInt(st.nextToken());
+        long weight;
+        for (int tc = 1; tc <= T; tc++) {
             st = new StringTokenizer(br.readLine());
-            k = Integer.parseInt(st.nextToken());
+            k = Integer.parseInt(st.nextToken()); // 합해서 돼야 할 숫자
             n = Integer.parseInt(st.nextToken());
 
             int[][] group = new int[4][n];
@@ -40,17 +40,20 @@ public class Main {
             Arrays.sort(calcGroup[1]);
 
             sb.append(k - find(calcGroup[0], calcGroup[1])).append('\n');
+
         }
 
         System.out.println(sb);
-        br.close();
     }
 
     public static int find(int[] first, int[] second) {
 
-        int ans = 0, min = Integer.MAX_VALUE;
-        for (int i : first) {
-            int result = binarySearch(second, k - i);
+        int ans = 0;
+        int min = Integer.MAX_VALUE;
+
+        for (int i=0; i<first.length; i++) {
+            int tmp = first[i];
+            int result = binarySearch(second, k - tmp);
             int abs = Math.abs(result);
 
             if (min > abs) {
@@ -63,10 +66,14 @@ public class Main {
 
         return ans;
     }
+
     public static int binarySearch(int[] arr, int num) {
 
-        int result = 0, min = Integer.MAX_VALUE;
-        int left = 0, right = arr.length - 1;
+        int result = 0;
+        int min = Integer.MAX_VALUE;
+        int left = 0;
+        int right = arr.length - 1;
+
         while (left <= right) {
             int mid = (left + right) >> 1;
 
@@ -91,4 +98,5 @@ public class Main {
 
         return result;
     }
+
 }
