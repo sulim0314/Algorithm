@@ -17,7 +17,7 @@ public class Main {
     static int max = 0;
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
-    static boolean[][] check;
+    static boolean[][] check; // 블록이 합쳐졌는지 확인하는 배열
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -70,8 +70,9 @@ public class Main {
 
     }
 
+    // 방향대로 블록 이동시키기
     private static void move(int[][] map, int d) {
-
+        // 블록이 합쳐졌는지
         check = new boolean[N][N];
 
         if(d == 0) { // 상
@@ -80,8 +81,8 @@ public class Main {
                     if(map[i][j] != 0) {
                         int num = map[i][j];
                         Info next = go(i, j, d, map);
-                        map[i][j] = 0;
-                        map[next.x][next.y] += num;
+                        map[i][j] = 0;  // 기존 위치 없애기
+                        map[next.x][next.y] += num; // 새로운 위치에 블록 값 추가
                     }
                 }
             }
@@ -120,17 +121,9 @@ public class Main {
             }
         }
 
-
-        for(int i=0; i<N; i++) {
-            for(int j=0; j<N; j++) {
-
-            }
-        }
-
-
-
     }
 
+    // 블록이 움직일 수 있는 가장 먼 위치 찾기
     private static Info go(int i, int j, int d, int[][] map) {
         Info cur;
         int x = i;
