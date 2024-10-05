@@ -15,11 +15,7 @@ public class Main {
         arr = new String[len];
 
         for(int i=0; i<len; i++) {
-            String tmp = "";
-            for(int j=i; j<len; j++) {
-                tmp += Character.toString(line.charAt(j));
-            }
-            arr[i] = tmp;
+            arr[i] = line.substring(i);
         }
 
         Arrays.sort(arr);
