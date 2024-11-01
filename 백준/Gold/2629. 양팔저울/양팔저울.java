@@ -29,9 +29,17 @@ public class Main {
         st = new StringTokenizer(br.readLine());
         for(int i=0; i<c; i++) {
             int check = Integer.parseInt(st.nextToken());
-            if(dp[N][check]) {
-                sb.append("Y ");
-            } else {
+            boolean flag = false;
+
+            for(int j=0; j<N+1; j++) {
+                if(dp[j][check]) {
+                    sb.append("Y ");
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (!flag) {
                 sb.append("N ");
             }
         }
