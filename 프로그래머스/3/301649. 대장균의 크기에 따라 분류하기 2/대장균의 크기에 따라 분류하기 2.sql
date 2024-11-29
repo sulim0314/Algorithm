@@ -1,19 +1,17 @@
 with tmp as (
-    select 
-        id, 
-        size_of_colony, 
-        rank() over (order by size_of_colony desc) as r,
-        count(*) over() as total
-    from ECOLI_DATA
+    select
+        id,
+        rank() over(order by SIZE_OF_COLONY desc) as s,
+        (SELECT COUNT(*) FROM ecoli_data) AS total_count
+    from ecoli_data
 )
 
-select 
-    tmp.id,
-    case 
-        when tmp.r <= total/4 then 'CRITICAL' 
-        when tmp.r <= 2*total/4 then 'HIGH'
-        when tmp.r <= 3*total/4 then 'MEDIUM' 
-        when tmp.r > 3*total/4 then 'LOW' 
-    end as colony_name
+select
+    id,
+    case
+        when s/total_count <= 0.25 then 'CRITICAL'
+        when s/total_count <= 0.5 then 'HIGH'
+        when s/total_count <= 0.75 then 'MEDIUM'
+    else 'LOW' end as COLONY_NAME
 from tmp
 order by 1 asc;
